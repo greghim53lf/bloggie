@@ -28,6 +28,10 @@ UserSchema.pre('save', async function (next) {
     next()
 })
 
+UserSchema.methods.isPasswordMatch = async function (password) {
+    return await bcryptjs.compare(password, this.password);
+}
+
 const User = model('User', UserSchema)
 
 export default User
