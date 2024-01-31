@@ -1,21 +1,24 @@
 import httpStatus from "http-status"
 import User from "../models/user.model.js"
+import { errorHandler } from "../utils/error.js"
 
-export const SignUp = async (req, res) => {
+export const SignUp = async (req, res, next) => {
         const {username, email, password} = req.body
 
     if (!username || !email || !password) { 
-        return res.status(httpStatus.OK).json({message: "Missing field(s)"})
+        return next(errorHandler(httpStatus.BAD_REQUEST, "Missing field(s)"))
     }
     
+    const newUser = new User({
+    username,
+    email,
+    password
+
+})
     try {
-        const newUser = await User.create({
-            username,
-            email,
-            password
-        })
+        await newUser.save();
         res.status(httpStatus.OK).json({ message: 'Signup successful', data: newUser })
-    } catch ({message}) {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message })
+    } catch (error) {
+        next(error)
     }
 }
