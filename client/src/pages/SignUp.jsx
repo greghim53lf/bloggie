@@ -22,20 +22,20 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
+    if ( !formData.email || !formData.password) {
       return setErrorMessage("Missing field(s)")
     }
     try {
       setIsLoading(true)
       setErrorMessage(null)
-      const res = fetch('api/auth/sign-up', {
+      const res = await fetch('api/auth/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       })
-      const data = (await res).json()
+      const data = await res.json()
       if (data.success === false) {
         return setErrorMessage(data.message)
       }
