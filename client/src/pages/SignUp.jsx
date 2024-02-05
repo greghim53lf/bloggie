@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import {Alert, Button, Label, Spinner, TextInput} from "flowbite-react"
 import { useState } from "react";
+import OAuth from '../components/OAuth';
 
 export default function SignUp() {
   const initialFormState = {
@@ -10,7 +11,9 @@ export default function SignUp() {
   }
   
   const [formData, setFormData] = useState(initialFormState)
+
   const [errorMessage, setErrorMessage] = useState(null)
+
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -25,9 +28,11 @@ export default function SignUp() {
     if ( !formData.email || !formData.password) {
       return setErrorMessage("Missing field(s)")
     }
+
     try {
       setIsLoading(true)
       setErrorMessage(null)
+
       const res = await fetch('api/auth/sign-up', {
         method: 'POST',
         headers: {
@@ -35,18 +40,24 @@ export default function SignUp() {
         },
         body: JSON.stringify(formData)
       })
+
       const data = await res.json()
+
+      setIsLoading(false)
+      setFormData(initialFormState)
+
       if (data.success === false) {
         return setErrorMessage(data.message)
       }
-      setIsLoading(false)
-      setFormData(initialFormState)
-      if (data) {
+
+
+      if (res.ok) {
         navigate('/sign-in')
       }
+      
     } catch ({message}) {
-      setIsLoading(false)
       setErrorMessage(message);
+      setIsLoading(false)
     }
   }
   
@@ -64,7 +75,7 @@ export default function SignUp() {
         </span>
           </Link>
           <p className="text-sm mt-5">
-            Itskillz Capstone Project. Sign up with your email and password
+            Bloggie with friends. Sign up with your email and password
             or with Google.
           </p>
         </div>
@@ -88,6 +99,7 @@ export default function SignUp() {
               <Spinner size='sm'/><span className="pl-3">Loading...</span>
               </> : 'Sign Up'}
             </Button>
+            <OAuth/>
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Have an account?</span>

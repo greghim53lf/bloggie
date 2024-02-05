@@ -16,6 +16,10 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    profilePicture: {
+        type: String,
+        default: 'https://w7.pngwing.com/pngs/184/113/png-transparent-user-profile-computer-icons-profile-heroes-black-silhouette-thumbnail.png'
     }
 }, {
     timestamps: true
